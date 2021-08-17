@@ -29,14 +29,14 @@ body {
 .nav-items {
   display: flex;
   list-style-type: none;
-  gap: 8vw;
+  gap: 6vw;
   padding: 0;
   margin: 0;
 }
 
 .app {
-  width: 600px;
-  margin: auto;
+  width: 80vw;
+  margin: 20px auto;
   background-color: #fff;
   box-shadow: 0 3px 5px rgb(163, 158, 158);
 }
@@ -154,4 +154,10 @@ body {
   background-color: #4c3c3c;
   color: white;
   height: 50px;
+}
+
+@media all and (min-width: 786px) {
+  .app {
+    width: 50vw;
+  }
 }
