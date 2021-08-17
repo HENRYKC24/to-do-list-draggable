@@ -21,6 +21,10 @@ body {
   height: 50px;
 }
 
+.app-heading {
+  text-align: center;
+}
+
 .app-name {
   font-size: 1.3rem;
   font-weight: bold;
