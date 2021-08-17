@@ -25,6 +25,10 @@ body {
   box-shadow: 0 3px 5px rgb(163, 158, 158);
 }
 
+.title {
+  font-weight: bold;
+}
+
 .refresh,
 .add {
   display: flex;
@@ -54,6 +58,10 @@ body {
   margin: 0 10px 0 0;
 }
 
+.checkbox:hover {
+  cursor: pointer;
+}
+
 .clear-all {
   text-align: center;
   line-height: 30px;
@@ -61,10 +69,28 @@ body {
   border-bottom: none;
 }
 
+.clear-text:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: rgb(75, 66, 66);
+}
+
 .to-do-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.to-do {
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: rgb(134, 122, 122);
+}
+
+.to-do:focus {
+  border: none;
+  outline: none;
 }
 
 .refresh p {
@@ -85,4 +111,14 @@ body {
 
 .fa-ellipsis-v {
   color: rgb(204, 187, 187);
+}
+
+.fa-ellipsis-v:hover {
+  cursor: move;
+  color: rgb(75, 66, 66);
+}
+
+.fa-sync:hover,
+.return:hover {
+  cursor: pointer;
 }
