@@ -1,0 +1,88 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #f6f6f6;
+  height: 100vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: sans-serif;
+  color: rgb(150, 145, 145);
+}
+
+.nav-items {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.app {
+  width: 600px;
+  margin: auto;
+  background-color: #fff;
+  box-shadow: 0 3px 5px rgb(163, 158, 158);
+}
+
+.refresh,
+.add {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-row {
+  padding: 10px;
+  border-bottom: 0.5px solid rgb(230, 222, 222);
+  height: 30px;
+}
+
+::placeholder {
+  font-style: italic;
+  font-size: 1rem;
+  color: rgb(196, 185, 185);
+}
+
+.two {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.checkbox {
+  margin: 0 10px 0 0;
+}
+
+.clear-all {
+  text-align: center;
+  line-height: 30px;
+  background-color: #f6f6f6;
+  border-bottom: none;
+}
+
+.to-do-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.refresh p {
+  margin: 0;
+  padding: 0;
+}
+
+.input {
+  border: none;
+  background-color: inherit;
+  font-size: 1.5rem;
+}
+
+.input:focus {
+  border: none;
+  outline: none;
+}
+
+.fa-ellipsis-v {
+  color: rgb(204, 187, 187);
+}
