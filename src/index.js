@@ -2,7 +2,7 @@ import './style.css';
 
 document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
 
-const toBeDeleted = [];
+let toBeDeleted = [];
 const generateToDoRows = (text, index) => {
   const div = document.createElement('div');
   div.classList.add('to-do-row', 'custom-row');
@@ -14,9 +14,15 @@ const generateToDoRows = (text, index) => {
   input.classList.add('checkbox');
   input.type = 'checkbox';
   input.addEventListener('click', () => {
+    const nextToCheckBox = input.nextElementSibling;
     if (input.checked) {
+      nextToCheckBox.style.textDecorationLine = 'line-through';
+      nextToCheckBox.style.color = '#ccc';
+      nextToCheckBox.style.textDecorationThickness = '2px';
       toBeDeleted.push(index);
     } else {
+      nextToCheckBox.style.textDecorationLine = 'none';
+      nextToCheckBox.style.color = 'rgb(150, 145, 145)';
       toBeDeleted.splice(toBeDeleted.indexOf(index), 1);
     }
   });
@@ -38,13 +44,7 @@ const generateToDoRows = (text, index) => {
   return true;
 };
 
-let tasks = [
-  {
-    description: 'Example text',
-    completed: true,
-    index: 0,
-  },
-];
+let tasks = [];
 
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
@@ -53,6 +53,8 @@ const showToDo = (tasks) => {
 
 const remove = () => {
   tasks = tasks.filter((task) => !toBeDeleted.includes(task.index));
+  toBeDeleted = [];
+  localStorage.setItem('tasks', JSON.stringify(tasks));
   showToDo(tasks);
 };
 
@@ -63,7 +65,10 @@ const addToDo = () => {
   if (!description) return;
   const indexArray = tasks.map(({ index }) => index);
   const sortedIndeces = indexArray.sort((a, b) => a - b);
-  const highestIndex = sortedIndeces[sortedIndeces.length - 1];
+  let highestIndex = sortedIndeces[sortedIndeces.length - 1];
+  if (Number.isNaN(highestIndex) || !highestIndex) {
+    highestIndex = 0;
+  }
   const data = {
     description,
     index: highestIndex + 1,
