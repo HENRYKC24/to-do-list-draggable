@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List</title>
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+      integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
+      crossorigin="anonymous"
+    />
+  <script defer src="index.bundle.js"></script></head>
+  <body>
+    <header class="header">
+      <nav class="nav-bar">
+        <span class="app-name">Smart To-Do</span>
+        <ul class="nav-items">
+          <li class="item">Item 1</li>
+          <li class="item">Item 2</li>
+          <li class="item">Item 3</li>
+        </ul>
+      </nav>
+    </header>
+    <main role="main" class="main">
+      <section class="app">
+        <div class="refresh custom-row">
+          <p class="title">Demo</p>
+          <i class="far fa-sync"></i>
+        </div>
+        <div class="add custom-row">
+          <input type="text" placeholder="Add to your list..." class="input" />
+          <i class="return">↵</i>
+        </div>
+        <div class="to-do-list"></div>
+        <div class="clear-all custom-row">
+          <span class="clear-text">Clear all completed</span>
+        </div>
+      </section>
+    </main>
+    <footer class="footer"><span class="footer-text"></span></footer>
+  </body>
+</html>

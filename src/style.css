@@ -123,6 +123,7 @@ body {
   background-color: inherit;
   font-size: 1.2rem;
   color: rgb(150, 145, 145);
+  width: 100%;
   font-style: italic;
 }
 
