@@ -29,7 +29,16 @@ let tasks = [
 
 const goToInput = () => document.querySelector('.input').focus();
 
-const generateToDoRows = (text, task) => {
+const removeOne = (e, task, tasks, i) => {
+  e.stopPropagation();
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  tasks.splice(tasks.indexOf(task), 1);
+  // eslint-disable-next-line no-use-before-define
+  showToDo(tasks);
+  i.removeEventListener('click', removeOne);
+};
+
+const generateToDoRows = (text, task, tasks) => {
   const div = document.createElement('div');
   div.classList.add('to-do-row', 'custom-row');
 
@@ -49,6 +58,7 @@ const generateToDoRows = (text, task) => {
 
   const input2 = document.createElement('input');
   input2.classList.add('to-do');
+
   input2.type = 'text';
   input2.value = text;
   div2.appendChild(input2);
@@ -59,13 +69,32 @@ const generateToDoRows = (text, task) => {
   i.classList.add('fas', 'fa-ellipsis-v');
   div.appendChild(i);
 
+  input2.addEventListener('focus', () => {
+    input2.style.backgroundColor = '#fffeca';
+    div.style.backgroundColor = '#fffeca';
+    i.classList.remove('fa-ellipsis-v');
+    i.classList.add('fa-trash-alt');
+    i.addEventListener('click', (e) => removeOne(e, task, tasks, i));
+  });
+
+  input2.addEventListener('blur', () => {
+    input2.style.backgroundColor = '#fff';
+    div.style.backgroundColor = '#fff';
+    setTimeout(() => {
+      i.classList.remove('fa-trash-alt');
+      i.classList.add('fa-ellipsis-v');
+      i.removeEventListener('click', (e) => removeOne(e, task, tasks));
+    }, 200);
+  });
+
   document.querySelector('.to-do-list').appendChild(div);
   return true;
 };
 
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
-  tasks.forEach((task) => generateToDoRows(task.description, task));
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
 };
 
 const remove = () => {
@@ -104,6 +133,13 @@ const addToDo = () => {
 };
 
 document.querySelector('.return').addEventListener('click', () => addToDo());
+document.querySelector('.fa-sync').addEventListener('click', () => {
+  document.querySelector('.fa-sync').classList.toggle('rotate-sync');
+});
+
+document.querySelector('.item:nth-child(3)').addEventListener('click', () => {
+  document.querySelector('.fa-sync').classList.toggle('rotate-sync');
+});
 
 const refresh = () => {
   tasks = _.sortBy(tasks, 'index');
