@@ -11,6 +11,12 @@ body {
   color: rgb(150, 145, 145);
 }
 
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 .nav-bar {
   display: flex;
   justify-content: space-between;
@@ -21,14 +27,26 @@ body {
   height: 50px;
 }
 
-.app-heading {
-  text-align: center;
-  color: #4c3c3c;
+.app-name {
+  font-size: 1.3rem;
   font-weight: bold;
 }
 
-.app-name {
-  font-size: 1.3rem;
+.app-name a,
+.item a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.item:hover,
+.app-name:hover {
+  cursor: pointer;
+  color: tomato;
+}
+
+.app-heading {
+  text-align: center;
+  color: #4c3c3c;
   font-weight: bold;
 }
 
@@ -150,6 +168,10 @@ body {
 .fa-ellipsis-v:hover {
   cursor: move;
   color: rgb(75, 66, 66);
+}
+
+.return {
+  font-size: 2rem;
 }
 
 .fa-sync:hover,
