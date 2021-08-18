@@ -41,28 +41,27 @@ body {
 .item:hover,
 .app-name:hover {
   cursor: pointer;
-  color: tomato;
-}
-
-.app-heading {
-  text-align: center;
-  color: #4c3c3c;
-  font-weight: bold;
+  color: rgb(248, 7, 216);
 }
 
 .nav-items {
   display: flex;
   list-style-type: none;
-  gap: 6vw;
+  gap: 5vw;
   padding: 0;
   margin: 0;
+  font-weight: bold;
 }
 
 .app {
-  width: 80vw;
+  width: 90vw;
   margin: 20px auto;
   background-color: #fff;
   box-shadow: 0 3px 5px rgb(163, 158, 158);
+}
+
+.app-heading {
+  text-align: center;
 }
 
 .title {
