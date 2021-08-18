@@ -1,6 +1,6 @@
 import './style.css';
 import _ from 'lodash';
-import updateCompleted from './completedToDo';
+import updateCompleted, { addEventListenerToLinks } from './completedToDo';
 
 document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
 
@@ -26,6 +26,8 @@ let tasks = [
     index: 12,
   },
 ];
+
+const goToInput = () => document.querySelector('.input').focus();
 
 const generateToDoRows = (text, task) => {
   const div = document.createElement('div');
@@ -71,13 +73,18 @@ const remove = () => {
   tasks = tasks.filter((task) => !task.completed);
   localStorage.setItem('tasks', JSON.stringify(tasks));
   showToDo(tasks);
+  goToInput();
+  return true;
 };
 
 document.querySelector('.clear-text').addEventListener('click', remove);
 
 const addToDo = () => {
   const description = document.querySelector('.input').value;
-  if (!description) return;
+  if (!description) {
+    goToInput();
+    return false;
+  }
   const indexArray = tasks.map(({ index }) => index);
   const sortedIndeces = indexArray.sort((a, b) => a - b);
   let highestIndex = sortedIndeces[sortedIndeces.length - 1];
@@ -93,6 +100,8 @@ const addToDo = () => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
   showToDo(tasks);
   document.querySelector('.input').value = '';
+  goToInput();
+  return true;
 };
 
 document.querySelector('.return').addEventListener('click', () => addToDo());
@@ -103,6 +112,7 @@ const refresh = () => {
     tasks = JSON.parse(localStorage.getItem('tasks'));
   }
   showToDo(tasks);
+  goToInput();
   return true;
 };
 
@@ -118,6 +128,8 @@ document.querySelector('.input').addEventListener('keypress', (e) => {
   }
   return true;
 });
+
+addEventListenerToLinks(addToDo, remove, refresh);
 
 refresh();
 
