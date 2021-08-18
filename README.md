@@ -3,6 +3,7 @@ A smart draggable to do list project to demonstrate my understanding of webpack 
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
 ![screenshot](./app_screenshot.png)
+![screenshot](./app_screenshot_moblile.png)
 
 ## Built With
 
