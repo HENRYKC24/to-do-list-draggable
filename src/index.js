@@ -2,7 +2,49 @@ import './style.css';
 import _ from 'lodash';
 import updateCompleted, { addEventListenerToLinks } from './completedToDo';
 
-document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
+document.querySelector(
+  '.footer-text'
+).innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
+
+let dragStore = null;
+
+function drag(ev) {
+  const draggedElement = ev.target;
+  dragStore = draggedElement;
+  if (draggedElement.parentElement !== null) {
+    draggedElement.parentElement.removeChild(draggedElement);
+  }
+  // ev.dataTransfer.setData("text", ev.target.id);
+};
+
+function onDragOver(ev) {
+  ev.preventDefault();
+  const elUnder = ev.target;
+  const pElement = elUnder.parentElement;
+  const parentName = pElement.nodeName;
+  let wantedDiv = null;
+  if (parentName === 'FORM') {
+  } else if (parentName === 'DIV') {
+    const actualDivClass = ev.target.classList[0];
+    if (actualDivClass === 'to-do-row') {
+      elUnder.parentElement.insertBefore(dragStore, elUnder);
+    } else if (actualDivClass === 'to-do') {
+      elUnder.parentElement.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement.parentElement);
+    } else if (actualDivClass === 'fas') {
+      elUnder.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement);
+    } else if (actualDivClass === 'checkbox') {
+      elUnder.parentElement.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement.parentElement);
+    }
+  }
+
+  const hr = document.createElement('hr');
+  hr.classList.add('drop-point');
+  hr.style.height = '20px';
+};
+
+function onDrop(ev) {
+  ev.preventDefault();
+}
 
 let tasks = [
   {
@@ -41,6 +83,7 @@ const removeOne = (e, task, tasks, i) => {
 const generateToDoRows = (text, task, tasks) => {
   const div = document.createElement('div');
   div.classList.add('to-do-row', 'custom-row');
+  div.draggable = true;
 
   const div2 = document.createElement('div');
   div2.classList.add('two');
@@ -77,24 +120,52 @@ const generateToDoRows = (text, task, tasks) => {
     i.addEventListener('click', (e) => removeOne(e, task, tasks, i));
   });
 
-  input2.addEventListener('blur', () => {
+  const editToDo = (e, input, task, tasks) => {
+    const value = input.value;
+    if (value === '') {
+      removeOne(e, task, tasks, i);
+    }
+    task.description = value;
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    showToDo(tasks);
+  };
+
+  input2.addEventListener('blur', (e) => {
     input2.style.backgroundColor = '#fff';
     div.style.backgroundColor = '#fff';
+    editToDo(e, input2, task, tasks);
     setTimeout(() => {
       i.classList.remove('fa-trash-alt');
       i.classList.add('fa-ellipsis-v');
       i.removeEventListener('click', (e) => removeOne(e, task, tasks));
-    }, 200);
+    }, 0);
   });
 
-  document.querySelector('.to-do-list').appendChild(div);
+  input2.addEventListener('keypress', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (e.key === 'Enter') {
+      input2.blur();
+    }
+  });
+
+  const toDoContainer = document.querySelector('.to-do-list');
+  toDoContainer.appendChild(div);
+  div.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  div.addEventListener('drag', drag);
+  div.addEventListener('drop', onDragOver);
+  
   return true;
 };
 
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
+  tasks.forEach((task, index, tasks) =>
+    generateToDoRows(task.description, task, tasks)
+  );
 };
 
 const remove = () => {
