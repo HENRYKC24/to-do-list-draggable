@@ -2,38 +2,37 @@ import './style.css';
 import _ from 'lodash';
 import updateCompleted, { addEventListenerToLinks } from './completedToDo';
 
-document.querySelector(
-  '.footer-text'
-).innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
+document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
 
 let dragStore = null;
 
-function drag(ev) {
+const drag = (ev) => {
   const draggedElement = ev.target;
   dragStore = draggedElement;
   if (draggedElement.parentElement !== null) {
     draggedElement.parentElement.removeChild(draggedElement);
   }
-  // ev.dataTransfer.setData("text", ev.target.id);
 };
 
-function onDragOver(ev) {
+const onDragOver = (ev) => {
   ev.preventDefault();
   const elUnder = ev.target;
   const pElement = elUnder.parentElement;
   const parentName = pElement.nodeName;
-  let wantedDiv = null;
-  if (parentName === 'FORM') {
-  } else if (parentName === 'DIV') {
+  if (parentName === 'DIV') {
     const actualDivClass = ev.target.classList[0];
     if (actualDivClass === 'to-do-row') {
       elUnder.parentElement.insertBefore(dragStore, elUnder);
     } else if (actualDivClass === 'to-do') {
-      elUnder.parentElement.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement.parentElement);
+      elUnder.parentElement.parentElement.parentElement.insertBefore(
+        dragStore, elUnder.parentElement.parentElement,
+      );
     } else if (actualDivClass === 'fas') {
       elUnder.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement);
     } else if (actualDivClass === 'checkbox') {
-      elUnder.parentElement.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement.parentElement);
+      elUnder.parentElement.parentElement.parentElement.insertBefore(
+        dragStore, elUnder.parentElement.parentElement,
+      );
     }
   }
 
@@ -41,10 +40,6 @@ function onDragOver(ev) {
   hr.classList.add('drop-point');
   hr.style.height = '20px';
 };
-
-function onDrop(ev) {
-  ev.preventDefault();
-}
 
 let tasks = [
   {
@@ -121,12 +116,13 @@ const generateToDoRows = (text, task, tasks) => {
   });
 
   const editToDo = (e, input, task, tasks) => {
-    const value = input.value;
+    const { value } = input;
     if (value === '') {
       removeOne(e, task, tasks, i);
     }
     task.description = value;
     localStorage.setItem('tasks', JSON.stringify(tasks));
+    // eslint-disable-next-line no-use-before-define
     showToDo(tasks);
   };
 
@@ -156,16 +152,14 @@ const generateToDoRows = (text, task, tasks) => {
   });
   div.addEventListener('drag', drag);
   div.addEventListener('drop', onDragOver);
-  
+
   return true;
 };
 
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  tasks.forEach((task, index, tasks) =>
-    generateToDoRows(task.description, task, tasks)
-  );
+  tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
 };
 
 const remove = () => {
