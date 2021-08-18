@@ -23,6 +23,8 @@ body {
 
 .app-heading {
   text-align: center;
+  color: #4c3c3c;
+  font-weight: bold;
 }
 
 .app-name {
