@@ -25,20 +25,20 @@
     </header>
     <h1 class="app-heading">Smart To-Do App</h1>
     <main role="main" class="main">
-      <section class="app">
+      <form autocomplete="off" class="app">
         <div class="refresh custom-row">
           <p class="title">To-Do List</p>
           <i class="far fa-sync"></i>
         </div>
         <div class="add custom-row">
-          <input type="text" placeholder="Add to your list..." class="input" />
+          <input autocomplete="false" type="text" placeholder="Add to your list..." class="input" />
           <i class="return">+</i>
         </div>
         <div class="to-do-list"></div>
         <div class="clear-all custom-row">
           <span class="clear-text">Clear all completed</span>
         </div>
-      </section>
+      </form>
     </main>
     <footer class="footer"><span class="footer-text"></span></footer>
   </body>
