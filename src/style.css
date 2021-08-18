@@ -1,0 +1,170 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #f6f6f6;
+  height: 100vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: sans-serif;
+  color: rgb(150, 145, 145);
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5vw;
+  background-color: #4c3c3c;
+  color: white;
+  height: 50px;
+}
+
+.app-heading {
+  text-align: center;
+  color: #4c3c3c;
+  font-weight: bold;
+}
+
+.app-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.nav-items {
+  display: flex;
+  list-style-type: none;
+  gap: 6vw;
+  padding: 0;
+  margin: 0;
+}
+
+.app {
+  width: 80vw;
+  margin: 20px auto;
+  background-color: #fff;
+  box-shadow: 0 3px 5px rgb(163, 158, 158);
+}
+
+.title {
+  font-weight: bold;
+}
+
+.refresh,
+.add {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-row {
+  padding: 10px;
+  border-bottom: 0.5px solid rgb(230, 222, 222);
+  height: 30px;
+}
+
+::placeholder {
+  font-style: italic;
+  font-size: 1rem;
+  color: rgb(196, 185, 185);
+}
+
+.two {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.checkbox {
+  margin: 0 10px 0 0;
+}
+
+.checkbox:hover {
+  cursor: pointer;
+}
+
+.clear-all {
+  text-align: center;
+  line-height: 30px;
+  background-color: #f6f6f6;
+  border-bottom: none;
+}
+
+.clear-text:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color: rgb(75, 66, 66);
+}
+
+.to-do-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.to-do {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+  color: rgb(134, 122, 122);
+}
+
+.to-do:focus {
+  border: none;
+  outline: none;
+}
+
+.refresh p {
+  margin: 0;
+  padding: 0;
+}
+
+.input {
+  border: none;
+  background-color: inherit;
+  font-size: 1.2rem;
+  color: rgb(150, 145, 145);
+  width: 100%;
+  font-style: italic;
+}
+
+.input:focus {
+  border: none;
+  outline: none;
+}
+
+.fa-ellipsis-v {
+  color: rgb(204, 187, 187);
+}
+
+.fa-ellipsis-v:hover {
+  cursor: move;
+  color: rgb(75, 66, 66);
+}
+
+.fa-sync:hover,
+.return:hover {
+  cursor: pointer;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 5vw;
+  background-color: #4c3c3c;
+  color: white;
+  height: 50px;
+}
+
+@media all and (min-width: 786px) {
+  .app {
+    width: 50vw;
+  }
+}
