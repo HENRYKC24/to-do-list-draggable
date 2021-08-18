@@ -1,8 +1,34 @@
 import './style.css';
+import _ from 'lodash';
 
 document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
 
 let toBeDeleted = [];
+let tasks = [
+  {
+    description: 'Do the dishes',
+    completed: false,
+    index: 10,
+  },
+  {
+    description: 'Iron some clothes',
+    completed: false,
+    index: 7,
+  },
+  {
+    description: 'Arrange some clothes',
+    completed: false,
+    index: 1,
+  },
+  {
+    description: 'Call the police',
+    completed: false,
+    index: 12,
+  },
+];
+
+tasks = _.sortBy(tasks, 'index');
+
 const generateToDoRows = (text, index) => {
   const div = document.createElement('div');
   div.classList.add('to-do-row', 'custom-row');
@@ -43,8 +69,6 @@ const generateToDoRows = (text, index) => {
   document.querySelector('.to-do-list').appendChild(div);
   return true;
 };
-
-let tasks = [];
 
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
