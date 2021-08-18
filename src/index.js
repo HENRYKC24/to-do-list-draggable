@@ -66,13 +66,14 @@ let tasks = [
 
 const goToInput = () => document.querySelector('.input').focus();
 
-const removeOne = (e, task, tasks, i) => {
+const removeOne = (e, task, tasks) => {
   e.stopPropagation();
+  e.preventDefault();
   localStorage.setItem('tasks', JSON.stringify(tasks));
   tasks.splice(tasks.indexOf(task), 1);
   // eslint-disable-next-line no-use-before-define
   showToDo(tasks);
-  i.removeEventListener('click', removeOne);
+  // i.removeEventListener('click', removeOne);
 };
 
 const generateToDoRows = (text, task, tasks) => {
@@ -104,21 +105,23 @@ const generateToDoRows = (text, task, tasks) => {
   div.appendChild(div2);
 
   const i = document.createElement('i');
-  i.classList.add('fas', 'fa-ellipsis-v');
+  i.classList.add('fas', 'fa-arrows-alt');
   div.appendChild(i);
 
   input2.addEventListener('focus', () => {
     input2.style.backgroundColor = '#fffeca';
     div.style.backgroundColor = '#fffeca';
-    i.classList.remove('fa-ellipsis-v');
+    i.classList.remove('fa-arrows-alt');
     i.classList.add('fa-trash-alt');
-    i.addEventListener('click', (e) => removeOne(e, task, tasks, i));
+    i.addEventListener('click', (e) => {
+      removeOne(e, task, tasks, i);
+    });
   });
 
-  const editToDo = (e, input, task, tasks) => {
+  const editToDo = (input, task, tasks) => {
     const { value } = input;
     if (value === '') {
-      removeOne(e, task, tasks, i);
+      removeOne(task, tasks, i);
     }
     task.description = value;
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -126,15 +129,19 @@ const generateToDoRows = (text, task, tasks) => {
     showToDo(tasks);
   };
 
-  input2.addEventListener('blur', (e) => {
+  input2.addEventListener('blur', () => {
     input2.style.backgroundColor = '#fff';
     div.style.backgroundColor = '#fff';
-    editToDo(e, input2, task, tasks);
+
     setTimeout(() => {
       i.classList.remove('fa-trash-alt');
-      i.classList.add('fa-ellipsis-v');
+      i.classList.add('fa-arrows-alt');
       i.removeEventListener('click', (e) => removeOne(e, task, tasks));
-    }, 0);
+    }, 200);
+  });
+
+  input2.addEventListener('change', () => {
+    editToDo(input2, task, tasks);
   });
 
   input2.addEventListener('keypress', (e) => {
@@ -159,7 +166,9 @@ const generateToDoRows = (text, task, tasks) => {
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
+  if (tasks[0]) {
+    tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
+  }
 };
 
 const remove = () => {
@@ -208,7 +217,8 @@ document.querySelector('.item:nth-child(3)').addEventListener('click', () => {
 
 const refresh = () => {
   tasks = _.sortBy(tasks, 'index');
-  if (localStorage.getItem('tasks') !== null) {
+  const localTasks = localStorage.getItem('tasks');
+  if (localTasks !== null) {
     tasks = JSON.parse(localStorage.getItem('tasks'));
   } else {
     localStorage.setItem('tasks', JSON.stringify(tasks));
