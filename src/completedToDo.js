@@ -1,5 +1,6 @@
-const updateCompleted = (task) => {
+const updateCompleted = (task, tasks) => {
   task.completed = !task.completed;
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
 const addEventListenerToLinks = (addToDo, remove, refresh) => {

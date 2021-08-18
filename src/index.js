@@ -39,11 +39,10 @@ const generateToDoRows = (text, task) => {
   const input = document.createElement('input');
   input.classList.add('checkbox');
   input.type = 'checkbox';
-  input.checked = task.completed;
 
+  input.checked = task.completed;
   input.addEventListener('click', () => {
-    updateCompleted(input, task);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    updateCompleted(task, tasks);
     return true;
   });
   div2.appendChild(input);
@@ -110,6 +109,8 @@ const refresh = () => {
   tasks = _.sortBy(tasks, 'index');
   if (localStorage.getItem('tasks') !== null) {
     tasks = JSON.parse(localStorage.getItem('tasks'));
+  } else {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
   }
   showToDo(tasks);
   goToInput();
