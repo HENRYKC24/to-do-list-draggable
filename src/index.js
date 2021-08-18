@@ -1,9 +1,9 @@
 import './style.css';
 import _ from 'lodash';
+import updateCompleted from './completedToDo';
 
 document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
 
-let toBeDeleted = [];
 let tasks = [
   {
     description: 'Do the dishes',
@@ -27,9 +27,7 @@ let tasks = [
   },
 ];
 
-tasks = _.sortBy(tasks, 'index');
-
-const generateToDoRows = (text, index) => {
+const generateToDoRows = (text, task) => {
   const div = document.createElement('div');
   div.classList.add('to-do-row', 'custom-row');
 
@@ -39,18 +37,12 @@ const generateToDoRows = (text, index) => {
   const input = document.createElement('input');
   input.classList.add('checkbox');
   input.type = 'checkbox';
+  input.checked = task.completed;
+
   input.addEventListener('click', () => {
-    const nextToCheckBox = input.nextElementSibling;
-    if (input.checked) {
-      nextToCheckBox.style.textDecorationLine = 'line-through';
-      nextToCheckBox.style.color = '#ccc';
-      nextToCheckBox.style.textDecorationThickness = '2px';
-      toBeDeleted.push(index);
-    } else {
-      nextToCheckBox.style.textDecorationLine = 'none';
-      nextToCheckBox.style.color = 'rgb(150, 145, 145)';
-      toBeDeleted.splice(toBeDeleted.indexOf(index), 1);
-    }
+    updateCompleted(input, task);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    return true;
   });
   div2.appendChild(input);
 
@@ -72,12 +64,11 @@ const generateToDoRows = (text, index) => {
 
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
-  tasks.forEach((task) => generateToDoRows(task.description, task.index));
+  tasks.forEach((task) => generateToDoRows(task.description, task));
 };
 
 const remove = () => {
-  tasks = tasks.filter((task) => !toBeDeleted.includes(task.index));
-  toBeDeleted = [];
+  tasks = tasks.filter((task) => !task.completed);
   localStorage.setItem('tasks', JSON.stringify(tasks));
   showToDo(tasks);
 };
@@ -106,6 +97,21 @@ const addToDo = () => {
 
 document.querySelector('.return').addEventListener('click', () => addToDo());
 
+const refresh = () => {
+  tasks = _.sortBy(tasks, 'index');
+  if (localStorage.getItem('tasks') !== null) {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+  }
+  showToDo(tasks);
+  return true;
+};
+
+const refreshButton = document.querySelector('.fa-sync');
+refreshButton.addEventListener('click', () => {
+  refresh();
+  return true;
+});
+
 document.querySelector('.input').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     addToDo();
@@ -113,8 +119,6 @@ document.querySelector('.input').addEventListener('keypress', (e) => {
   return true;
 });
 
-if (localStorage.getItem('tasks') !== null) {
-  tasks = JSON.parse(localStorage.getItem('tasks'));
-}
+refresh();
 
 showToDo(tasks);
