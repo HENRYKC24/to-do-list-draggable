@@ -1,60 +1,22 @@
 import './style.css';
 import _ from 'lodash';
 import updateCompleted, { addEventListenerToLinks } from './completedToDo';
-
-document.querySelector('.footer-text').innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
-
-let dragStore = null;
-
-const drag = (ev) => {
-  const draggedElement = ev.target;
-  dragStore = draggedElement;
-  dragStore.style.backgroundColor = '#4c3c3c';
-};
-
-const dragStart = (e) => {
-  e.target.style.backgroundColor = '#4c3c3c';
-};
-
-const dragEnd = () => {
-  setTimeout(() => {
-    dragStore.style.backgroundColor = '#fff';
-  }, 1000);
-};
-
-const onDragOver = (ev) => {
-  ev.preventDefault();
-  const elUnder = ev.target;
-  const pElement = elUnder.parentElement;
-  const parentName = pElement.nodeName;
-  if (parentName === 'DIV') {
-    const actualDivClass = ev.target.classList[0];
-    if (actualDivClass === 'to-do-row') {
-      elUnder.parentElement.insertBefore(dragStore, elUnder);
-    } else if (actualDivClass === 'to-do') {
-      elUnder.parentElement.parentElement.parentElement.insertBefore(
-        dragStore, elUnder.parentElement.parentElement,
-      );
-    } else if (actualDivClass === 'fas') {
-      elUnder.parentElement.parentElement.insertBefore(dragStore, elUnder.parentElement);
-    } else if (actualDivClass === 'checkbox') {
-      elUnder.parentElement.parentElement.parentElement.insertBefore(
-        dragStore, elUnder.parentElement.parentElement,
-      );
-    }
-  }
-};
+import {
+  onDragOver,
+  dragEnd,
+  drag,
+  dragStart,
+  removeOne,
+  removeSelected,
+  addToDo,
+} from './manipulateToDo';
 
 let tasks = [];
-
 const goToInput = () => document.querySelector('.input').focus();
 
-const removeOne = (task, tasks) => {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  tasks.splice(tasks.indexOf(task), 1);
-  // eslint-disable-next-line no-use-before-define
-  showToDo(tasks);
-};
+document.querySelector(
+  '.footer-text',
+).innerHTML = `&copy; ${new Date().getFullYear()} Henry-Kc, built with 💕 from me`;
 
 const alternateTickAndCheck = (tick, check, task, input2) => {
   if (task.completed) {
@@ -66,6 +28,28 @@ const alternateTickAndCheck = (tick, check, task, input2) => {
     check.style.display = 'inline-block';
     input2.classList.remove('cross-out');
   }
+};
+
+const showToDo = (tasks) => {
+  document.querySelector('.to-do-list').innerHTML = '';
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  if (tasks[0]) {
+    // eslint-disable-next-line no-use-before-define
+    tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
+  }
+};
+
+const refresh = (showToDo) => {
+  tasks = _.sortBy(tasks, 'index');
+  const localTasks = localStorage.getItem('tasks');
+  if (localTasks !== null) {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+  } else {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+  showToDo(tasks);
+  goToInput();
+  return true;
 };
 
 const generateToDoRows = (text, task, tasks) => {
@@ -106,7 +90,7 @@ const generateToDoRows = (text, task, tasks) => {
     i.classList.remove('fa-arrows-alt');
     i.classList.add('fa-trash-alt');
     i.addEventListener('click', () => {
-      removeOne(task, tasks, i);
+      removeOne(task, tasks, showToDo);
     });
   });
   tick.addEventListener('click', () => {
@@ -134,7 +118,7 @@ const generateToDoRows = (text, task, tasks) => {
   const editToDo = (input, task, tasks) => {
     const { value } = input;
     if (value === '') {
-      removeOne(task, tasks, i);
+      removeOne(task, tasks, showToDo);
     }
     task.description = value;
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -149,7 +133,7 @@ const generateToDoRows = (text, task, tasks) => {
     setTimeout(() => {
       i.classList.remove('fa-trash-alt');
       i.classList.add('fa-arrows-alt');
-      i.removeEventListener('click', () => removeOne(task, tasks));
+      i.removeEventListener('click', () => removeOne(task, tasks, showToDo));
     }, 200);
   });
 
@@ -169,58 +153,17 @@ const generateToDoRows = (text, task, tasks) => {
   div.addEventListener('dragover', (e) => {
     e.preventDefault();
   });
-  div.addEventListener('drag', drag);
-  div.addEventListener('dragstart', dragStart);
-  div.addEventListener('dragend', dragEnd);
-  div.addEventListener('drop', onDragOver);
+  div.addEventListener('drag', (ev) => drag(ev));
+  div.addEventListener('dragstart', (e) => dragStart(e));
+  div.addEventListener('dragend', () => dragEnd());
+  div.addEventListener('drop', (ev) => onDragOver(ev));
 
   return true;
 };
 
-const showToDo = (tasks) => {
-  document.querySelector('.to-do-list').innerHTML = '';
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  if (tasks[0]) {
-    tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
-  }
-};
+document.querySelector('.clear-text').addEventListener('click', () => removeSelected(tasks, showToDo, goToInput));
 
-const remove = () => {
-  tasks = tasks.filter((task) => !task.completed);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  showToDo(tasks);
-  goToInput();
-  return true;
-};
-
-document.querySelector('.clear-text').addEventListener('click', remove);
-
-const addToDo = () => {
-  const description = document.querySelector('.input').value;
-  if (!description) {
-    goToInput();
-    return false;
-  }
-  const indexArray = tasks.map(({ index }) => index);
-  const sortedIndeces = indexArray.sort((a, b) => a - b);
-  let highestIndex = sortedIndeces[sortedIndeces.length - 1];
-  if (Number.isNaN(highestIndex) || !highestIndex) {
-    highestIndex = 0;
-  }
-  const data = {
-    description,
-    index: highestIndex + 1,
-    completed: false,
-  };
-  tasks.push(data);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  showToDo(tasks);
-  document.querySelector('.input').value = '';
-  goToInput();
-  return true;
-};
-
-document.querySelector('.return').addEventListener('click', () => addToDo());
+document.querySelector('.return').addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
 document.querySelector('.fa-sync').addEventListener('click', () => {
   document.querySelector('.fa-sync').classList.toggle('rotate-sync');
 });
@@ -229,34 +172,21 @@ document.querySelector('.item:nth-child(3)').addEventListener('click', () => {
   document.querySelector('.fa-sync').classList.toggle('rotate-sync');
 });
 
-const refresh = () => {
-  tasks = _.sortBy(tasks, 'index');
-  const localTasks = localStorage.getItem('tasks');
-  if (localTasks !== null) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  } else {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }
-  showToDo(tasks);
-  goToInput();
-  return true;
-};
-
 const refreshButton = document.querySelector('.fa-sync');
 refreshButton.addEventListener('click', () => {
-  refresh();
+  refresh(showToDo);
   return true;
 });
 
 document.querySelector('.input').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
-    addToDo();
+    addToDo(tasks, showToDo, goToInput);
   }
   return true;
 });
 
-addEventListenerToLinks(addToDo, remove, refresh);
+addEventListenerToLinks(addToDo, removeSelected, refresh);
 
-refresh();
+refresh(showToDo);
 
 showToDo(tasks);
