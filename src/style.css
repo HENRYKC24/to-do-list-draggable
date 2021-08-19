@@ -41,7 +41,7 @@ body {
 .item:hover,
 .app-name:hover {
   cursor: pointer;
-  color: rgb(248, 7, 216);
+  color: rgb(226, 214, 214);
 }
 
 .nav-items {
@@ -98,6 +98,13 @@ body {
   margin: 0 10px 0 0;
 }
 
+.fa-check {
+  display: none;
+  cursor: pointer;
+  color: rgb(13, 117, 30);
+  margin-right: 7px;
+}
+
 .to-do {
   border: none;
   padding: 0;
@@ -114,7 +121,7 @@ body {
   outline: none;
 }
 
-.checkbox:checked + .to-do {
+.cross-out {
   text-decoration: line-through;
   color: #ccc;
 }
