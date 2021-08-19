@@ -50,15 +50,16 @@ const removeOne = (task, tasks, showToDo) => {
   showToDo(tasks);
 };
 
-const removeSelected = (tasks, showToDo, goToInput) => {
+const removeSelected = (tasks, showToDo) => {
+  tasks = JSON.parse(localStorage.getItem('tasks'));
   tasks = tasks.filter((task) => !task.completed);
   localStorage.setItem('tasks', JSON.stringify(tasks));
   showToDo(tasks);
-  goToInput();
   return true;
 };
 
 const addToDo = (tasks, showToDo, goToInput) => {
+  tasks = JSON.parse(localStorage.getItem('tasks'));
   const description = document.querySelector('.input').value;
   if (!description) {
     goToInput();
