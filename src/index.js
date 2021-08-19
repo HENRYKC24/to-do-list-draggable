@@ -9,9 +9,17 @@ let dragStore = null;
 const drag = (ev) => {
   const draggedElement = ev.target;
   dragStore = draggedElement;
-  if (draggedElement.parentElement !== null) {
-    draggedElement.parentElement.removeChild(draggedElement);
-  }
+  dragStore.style.backgroundColor = '#4c3c3c';
+};
+
+const dragStart = (e) => {
+  e.target.style.backgroundColor = '#4c3c3c';
+};
+
+const dragEnd = () => {
+  setTimeout(() => {
+    dragStore.style.backgroundColor = '#fff';
+  }, 1000);
 };
 
 const onDragOver = (ev) => {
@@ -35,45 +43,29 @@ const onDragOver = (ev) => {
       );
     }
   }
-
-  const hr = document.createElement('hr');
-  hr.classList.add('drop-point');
-  hr.style.height = '20px';
 };
 
-let tasks = [
-  {
-    description: 'Do the dishes',
-    completed: false,
-    index: 10,
-  },
-  {
-    description: 'Iron some clothes',
-    completed: false,
-    index: 7,
-  },
-  {
-    description: 'Arrange some clothes',
-    completed: false,
-    index: 1,
-  },
-  {
-    description: 'Call the police',
-    completed: false,
-    index: 12,
-  },
-];
+let tasks = [];
 
 const goToInput = () => document.querySelector('.input').focus();
 
-const removeOne = (e, task, tasks) => {
-  e.stopPropagation();
-  e.preventDefault();
+const removeOne = (task, tasks) => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
   tasks.splice(tasks.indexOf(task), 1);
   // eslint-disable-next-line no-use-before-define
   showToDo(tasks);
-  // i.removeEventListener('click', removeOne);
+};
+
+const alternateTickAndCheck = (tick, check, task, input2) => {
+  if (task.completed) {
+    tick.style.display = 'inline-block';
+    check.style.display = 'none';
+    input2.classList.add('cross-out');
+  } else {
+    tick.style.display = 'none';
+    check.style.display = 'inline-block';
+    input2.classList.remove('cross-out');
+  }
 };
 
 const generateToDoRows = (text, task, tasks) => {
@@ -88,14 +80,14 @@ const generateToDoRows = (text, task, tasks) => {
   input.classList.add('checkbox');
   input.type = 'checkbox';
 
-  input.checked = task.completed;
-  input.addEventListener('click', () => {
-    updateCompleted(task, tasks);
-    return true;
-  });
+  const tick = document.createElement('i');
+  tick.classList.add('fas', 'fa-check');
+
   div2.appendChild(input);
+  div2.appendChild(tick);
 
   const input2 = document.createElement('input');
+  input2.contentEditable = true;
   input2.classList.add('to-do');
 
   input2.type = 'text';
@@ -113,10 +105,31 @@ const generateToDoRows = (text, task, tasks) => {
     div.style.backgroundColor = '#fffeca';
     i.classList.remove('fa-arrows-alt');
     i.classList.add('fa-trash-alt');
-    i.addEventListener('click', (e) => {
-      removeOne(e, task, tasks, i);
+    i.addEventListener('click', () => {
+      removeOne(task, tasks, i);
     });
   });
+  tick.addEventListener('click', () => {
+    updateCompleted(task, tasks);
+    alternateTickAndCheck(tick, input, task, input2);
+    return true;
+  });
+
+  input.addEventListener('click', (e) => {
+    e.preventDefault();
+    updateCompleted(task, tasks);
+    alternateTickAndCheck(tick, input, task, input2);
+    return true;
+  });
+  if (task.completed) {
+    tick.style.display = 'inline-block';
+    input.style.display = 'none';
+    input2.classList.add('cross-out');
+  } else if (!task.completed) {
+    tick.style.display = 'none';
+    input.style.display = 'inline-block';
+    input2.classList.remove('cross-out');
+  }
 
   const editToDo = (input, task, tasks) => {
     const { value } = input;
@@ -136,7 +149,7 @@ const generateToDoRows = (text, task, tasks) => {
     setTimeout(() => {
       i.classList.remove('fa-trash-alt');
       i.classList.add('fa-arrows-alt');
-      i.removeEventListener('click', (e) => removeOne(e, task, tasks));
+      i.removeEventListener('click', () => removeOne(task, tasks));
     }, 200);
   });
 
@@ -146,7 +159,6 @@ const generateToDoRows = (text, task, tasks) => {
 
   input2.addEventListener('keypress', (e) => {
     e.stopPropagation();
-    e.preventDefault();
     if (e.key === 'Enter') {
       input2.blur();
     }
@@ -158,6 +170,8 @@ const generateToDoRows = (text, task, tasks) => {
     e.preventDefault();
   });
   div.addEventListener('drag', drag);
+  div.addEventListener('dragstart', dragStart);
+  div.addEventListener('dragend', dragEnd);
   div.addEventListener('drop', onDragOver);
 
   return true;
