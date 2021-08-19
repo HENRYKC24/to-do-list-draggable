@@ -1,6 +1,6 @@
 import './style.css';
 import _ from 'lodash';
-import updateCompleted, { addEventListenerToLinks } from './completedToDo';
+import updateCompleted from './completedToDo';
 import {
   onDragOver,
   dragEnd,
@@ -33,7 +33,7 @@ const alternateTickAndCheck = (tick, check, task, input2) => {
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  if (tasks[0]) {
+  if (tasks[0].description) {
     // eslint-disable-next-line no-use-before-define
     tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
   }
@@ -161,9 +161,16 @@ const generateToDoRows = (text, task, tasks) => {
   return true;
 };
 
-document.querySelector('.clear-text').addEventListener('click', () => removeSelected(tasks, showToDo, goToInput));
+document.querySelector('.clear-text').addEventListener('click', () => {
+  if (localStorage.getItem('tasks') !== null) {
+    tasks = JSON.parse(localStorage.getItem('tasks'));
+  }
+  removeSelected(tasks, showToDo);
+});
 
-document.querySelector('.return').addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
+document
+  .querySelector('.return')
+  .addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
 document.querySelector('.fa-sync').addEventListener('click', () => {
   document.querySelector('.fa-sync').classList.toggle('rotate-sync');
 });
@@ -185,7 +192,15 @@ document.querySelector('.input').addEventListener('keypress', (e) => {
   return true;
 });
 
-addEventListenerToLinks(addToDo, removeSelected, refresh);
+document
+  .querySelector('.item:nth-child(1)')
+  .addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
+document
+  .querySelector('.item:nth-child(2)')
+  .addEventListener('click', () => removeSelected(tasks, showToDo));
+document
+  .querySelector('.item:nth-child(3)')
+  .addEventListener('click', () => refresh(showToDo));
 
 refresh(showToDo);
 
