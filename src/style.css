@@ -11,6 +11,12 @@ body {
   color: rgb(150, 145, 145);
 }
 
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
 .nav-bar {
   display: flex;
   justify-content: space-between;
@@ -21,30 +27,41 @@ body {
   height: 50px;
 }
 
-.app-heading {
-  text-align: center;
-  color: #4c3c3c;
-  font-weight: bold;
-}
-
 .app-name {
   font-size: 1.3rem;
   font-weight: bold;
 }
 
+.app-name a,
+.item a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.item:hover,
+.app-name:hover {
+  cursor: pointer;
+  color: rgb(226, 214, 214);
+}
+
 .nav-items {
   display: flex;
   list-style-type: none;
-  gap: 6vw;
+  gap: 5vw;
   padding: 0;
   margin: 0;
+  font-weight: bold;
 }
 
 .app {
-  width: 80vw;
+  width: 90vw;
   margin: 20px auto;
   background-color: #fff;
   box-shadow: 0 3px 5px rgb(163, 158, 158);
+}
+
+.app-heading {
+  text-align: center;
 }
 
 .title {
@@ -81,14 +98,22 @@ body {
   margin: 0 10px 0 0;
 }
 
+.fa-check {
+  display: none;
+  cursor: pointer;
+  color: rgb(13, 117, 30);
+  margin-right: 7px;
+}
+
 .to-do {
   border: none;
   padding: 0;
   margin: 0;
   display: inline-block;
   width: 100%;
-  height: 30px;
+  height: 50px;
   color: rgb(134, 122, 122);
+  font-size: 1.1rem;
 }
 
 .to-do:focus {
@@ -96,7 +121,7 @@ body {
   outline: none;
 }
 
-.checkbox:checked + .to-do {
+.cross-out {
   text-decoration: line-through;
   color: #ccc;
 }
@@ -143,13 +168,35 @@ body {
   outline: none;
 }
 
-.fa-ellipsis-v {
+.fa-arrows-alt {
   color: rgb(204, 187, 187);
 }
 
-.fa-ellipsis-v:hover {
+.fa-arrows-alt:hover {
   cursor: move;
   color: rgb(75, 66, 66);
+}
+
+.fa-trash-alt {
+  color: tomato;
+}
+
+.fa-trash-alt:hover {
+  cursor: pointer;
+}
+
+.fa-sync {
+  transform: rotate(110deg);
+  transform-origin: initial;
+  transition: all 1s;
+}
+
+.rotate-sync {
+  transform: rotate(830deg);
+}
+
+.return {
+  font-size: 2rem;
 }
 
 .fa-sync:hover,
