@@ -2,7 +2,7 @@ import './style.css';
 import _ from 'lodash';
 import updateCompleted from './completedToDo';
 import {
-  onDragOver,
+  drop,
   dragEnd,
   drag,
   dragStart,
@@ -33,7 +33,7 @@ const alternateTickAndCheck = (tick, check, task, input2) => {
 const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  if (tasks[0].description) {
+  if (typeof tasks[0] === 'object') {
     // eslint-disable-next-line no-use-before-define
     tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
   }
@@ -55,8 +55,8 @@ const refresh = (showToDo) => {
 const generateToDoRows = (text, task, tasks) => {
   const div = document.createElement('div');
   div.classList.add('to-do-row', 'custom-row');
+  div.id = task.index;
   div.draggable = true;
-
   const div2 = document.createElement('div');
   div2.classList.add('two');
 
@@ -155,8 +155,8 @@ const generateToDoRows = (text, task, tasks) => {
   });
   div.addEventListener('drag', (ev) => drag(ev));
   div.addEventListener('dragstart', (e) => dragStart(e));
-  div.addEventListener('dragend', () => dragEnd());
-  div.addEventListener('drop', (ev) => onDragOver(ev));
+  div.addEventListener('dragend', () => dragEnd(showToDo));
+  div.addEventListener('drop', (ev) => drop(ev));
 
   return true;
 };
