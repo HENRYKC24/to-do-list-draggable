@@ -79,7 +79,7 @@ const dragEnd = (showToDo) => {
   tasks = mockTasks;
   reorderIndices(tasks);
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  showToDo(JSON.parse(localStorage.getItem('tasks')));
+  showToDo();
 };
 
 const drag = (ev) => {
@@ -92,12 +92,13 @@ const dragStart = (e) => {
   e.target.style.backgroundColor = '#4c3c3c';
 };
 
-const removeOne = (task, tasks, showToDo) => {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-  tasks.splice(tasks.indexOf(task), 1);
+const removeOne = (task, showToDo) => {
+  let tasks = JSON.parse(localStorage.getItem('tasks'));
+  tasks = tasks.filter((oneTask) => oneTask.index !== task.index);
   reorderIndices(tasks);
   // eslint-disable-next-line no-use-before-define
-  showToDo(tasks);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  showToDo();
 };
 
 const removeSelected = (tasks, showToDo) => {
@@ -105,7 +106,7 @@ const removeSelected = (tasks, showToDo) => {
   tasks = tasks.filter((task) => !task.completed);
   reorderIndices(tasks);
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  showToDo(tasks);
+  showToDo();
   return true;
 };
 
@@ -124,7 +125,7 @@ const addToDo = (tasks, showToDo, goToInput) => {
   };
   tasks.push(data);
   localStorage.setItem('tasks', JSON.stringify(tasks));
-  showToDo(tasks);
+  showToDo();
   document.querySelector('.input').value = '';
   goToInput();
   return true;
