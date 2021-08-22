@@ -1,4 +1,9 @@
-let dragStore = null;
+let dragStore = document.querySelector('.to-do-row');
+const prevNextIds = {
+  prevId: 0,
+  nextId: 1,
+};
+
 const reorderIndices = (tasks) => {
   let index = 1;
   tasks.forEach((task) => {
@@ -6,31 +11,56 @@ const reorderIndices = (tasks) => {
     index += 1;
   });
 };
+
 const drop = (ev) => {
   ev.preventDefault();
-  const elUnder = ev.target;
-  const pElement = elUnder.parentElement;
-  const parentName = pElement.nodeName;
-  if (parentName === 'DIV') {
-    const actualDivClass = ev.target.classList[0];
-    if (actualDivClass === 'to-do-row') {
-      elUnder.parentElement.insertBefore(dragStore, elUnder.nextElementSibling);
-    } else if (actualDivClass === 'to-do') {
-      elUnder.parentElement.parentElement.parentElement.insertBefore(
-        dragStore,
-        elUnder.parentElement.parentElement.nextElementSibling,
-      );
-    } else if (actualDivClass === 'fas') {
-      elUnder.parentElement.parentElement.insertBefore(
-        dragStore,
-        elUnder.parentElement.nextElementSibling,
-      );
-    } else if (actualDivClass === 'checkbox') {
-      elUnder.parentElement.parentElement.parentElement.insertBefore(
-        dragStore,
-        elUnder.parentElement.parentElement.nextElementSibling,
-      );
-    }
+  let elUnder = ev.target;
+  const classArray = elUnder.classList.value.split(' ');
+
+  if (
+    classArray.includes('fa-check')
+    || classArray.includes('checkbox')
+    || classArray.includes('to-do')
+  ) {
+    elUnder = elUnder.parentElement.parentElement;
+  } else if (
+    classArray.includes('fa-arrows-alt')
+    || classArray.includes('two')
+  ) {
+    elUnder = elUnder.parentElement;
+  }
+  prevNextIds.nextId = Number(elUnder.id);
+  prevNextIds.prevId = Number(dragStore.id);
+
+  if (prevNextIds.prevId < prevNextIds.nextId) {
+    elUnder.parentElement.insertBefore(
+      dragStore,
+      elUnder.nextElementSibling,
+    );
+  } else if (prevNextIds.prevId > prevNextIds.nextId) {
+    elUnder.parentElement.insertBefore(dragStore, elUnder);
+  }
+
+  const { id } = elUnder;
+
+  if (prevNextIds.prevId < prevNextIds.nextId) {
+    setTimeout(() => {
+      document.getElementById(id).style.backgroundColor = '#4c3c3c';
+      setTimeout(() => {
+        document.getElementById(id).style.backgroundColor = '#fff';
+      }, 810);
+    }, 10);
+  } else if (prevNextIds.prevId > prevNextIds.nextId) {
+    setTimeout(() => {
+      document.getElementById(
+        id,
+      ).style.backgroundColor = '#4c3c3c';
+      setTimeout(() => {
+        document.getElementById(
+          id,
+        ).style.backgroundColor = '#fff';
+      }, 810);
+    }, 10);
   }
 };
 
@@ -101,11 +131,5 @@ const addToDo = (tasks, showToDo, goToInput) => {
 };
 
 export {
-  drop,
-  dragEnd,
-  drag,
-  dragStart,
-  removeOne,
-  removeSelected,
-  addToDo,
+  drop, dragEnd, drag, dragStart, removeOne, removeSelected, addToDo,
 };
