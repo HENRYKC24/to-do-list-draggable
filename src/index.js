@@ -193,14 +193,14 @@ document.querySelector('.input').addEventListener('keypress', (e) => {
 });
 
 document
-.querySelector('.item:nth-child(1)')
-.addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
+  .querySelector('.item:nth-child(1)')
+  .addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
 document
-.querySelector('.item:nth-child(2)')
-.addEventListener('click', () => removeSelected(tasks, showToDo));
+  .querySelector('.item:nth-child(2)')
+  .addEventListener('click', () => removeSelected(tasks, showToDo));
 document
-.querySelector('.item:nth-child(3)')
-.addEventListener('click', () => refresh(showToDo));
+  .querySelector('.item:nth-child(3)')
+  .addEventListener('click', () => refresh(showToDo));
 
 refresh(showToDo);
 
@@ -212,11 +212,22 @@ document.querySelector('.item:nth-child(2)').title = 'remove completed tasks';
 document.querySelector('.item:nth-child(1)').title = 'add tasks';
 document.querySelector('.clear-text').title = 'remove completed tasks';
 const allCheckboxes = Array.from(document.querySelectorAll('.checkbox'));
-allCheckboxes.forEach((checkbox) => checkbox.title = 'mark as completed');
+allCheckboxes.forEach((checkbox) => {
+  checkbox.title = 'mark as completed';
+  return true;
+});
 const allTickMarks = Array.from(document.querySelectorAll('.fa-check'));
-allTickMarks.forEach((tickMark) => tickMark.title = 'unmark as completed');
+allTickMarks.forEach((tickMark) => {
+  tickMark.title = 'unmark as completed';
+  return true;
+});
 const allTodoItems = Array.from(document.querySelectorAll('.to-do'));
-allTodoItems.forEach((todo) => todo.title = 'click to delete/edit, drag to move');
+allTodoItems.forEach((todo) => {
+  todo.title = 'click to delete/edit, drag to move';
+  return true;
+});
 const allMoveButtons = Array.from(document.querySelectorAll('fa-arrows-alt'));
-console.log(allMoveButtons);
-allMoveButtons.forEach((moveButton) => moveButton.title = 'drag within the box to move');
+allMoveButtons.forEach((moveButton) => {
+  moveButton.title = 'drag within the box to move';
+  return true;
+});
