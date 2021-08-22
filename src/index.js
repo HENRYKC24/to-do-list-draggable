@@ -1,5 +1,4 @@
 import './style.css';
-import _ from 'lodash';
 import updateCompleted from './completedToDo';
 import {
   drop,
@@ -30,24 +29,28 @@ const alternateTickAndCheck = (tick, check, task, input2) => {
   }
 };
 
-const showToDo = (tasks) => {
+const showToDo = () => {
   document.querySelector('.to-do-list').innerHTML = '';
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  const tasks = JSON.parse(localStorage.getItem('tasks'));
   if (typeof tasks[0] === 'object') {
-    // eslint-disable-next-line no-use-before-define
-    tasks.forEach((task, index, tasks) => generateToDoRows(task.description, task, tasks));
+    tasks.forEach((task, index, tasks) => {
+      // eslint-disable-next-line no-use-before-define
+      generateToDoRows(task.description, task, tasks);
+    });
+    return true;
   }
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  return true;
 };
 
 const refresh = (showToDo) => {
-  tasks = _.sortBy(tasks, 'index');
-  const localTasks = localStorage.getItem('tasks');
-  if (localTasks !== null) {
+  // tasks = _.sortBy(tasks, 'index');
+  if (localStorage.getItem('tasks') !== null) {
     tasks = JSON.parse(localStorage.getItem('tasks'));
   } else {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
-  showToDo(tasks);
+  showToDo();
   goToInput();
   return true;
 };
@@ -90,7 +93,7 @@ const generateToDoRows = (text, task, tasks) => {
     i.classList.remove('fa-arrows-alt');
     i.classList.add('fa-trash-alt');
     i.addEventListener('click', () => {
-      removeOne(task, tasks, showToDo);
+      removeOne(task, showToDo);
     });
   });
   tick.addEventListener('click', () => {
@@ -118,12 +121,12 @@ const generateToDoRows = (text, task, tasks) => {
   const editToDo = (input, task, tasks) => {
     const { value } = input;
     if (value === '') {
-      removeOne(task, tasks, showToDo);
+      removeOne(task, showToDo);
     }
     task.description = value;
     localStorage.setItem('tasks', JSON.stringify(tasks));
     // eslint-disable-next-line no-use-before-define
-    showToDo(tasks);
+    showToDo();
   };
 
   input2.addEventListener('blur', () => {
@@ -133,7 +136,7 @@ const generateToDoRows = (text, task, tasks) => {
     setTimeout(() => {
       i.classList.remove('fa-trash-alt');
       i.classList.add('fa-arrows-alt');
-      i.removeEventListener('click', () => removeOne(task, tasks, showToDo));
+      i.removeEventListener('click', () => removeOne(task, showToDo));
     }, 200);
   });
 
@@ -204,7 +207,7 @@ document
 
 refresh(showToDo);
 
-showToDo(tasks);
+showToDo();
 
 document.querySelector('.fa-sync').title = 'remove tasks completed more than one month ago';
 document.querySelector('.item:nth-child(3)').title = 'remove tasks completed more than one month ago';
