@@ -11,6 +11,7 @@ import {
 } from './manipulateToDo';
 
 let tasks = [];
+let removable = true;
 const goToInput = () => document.querySelector('.input').focus();
 
 document.querySelector(
@@ -92,8 +93,9 @@ const generateToDoRows = (text, task, tasks) => {
     div.style.backgroundColor = '#fffeca';
     i.classList.remove('fa-arrows-alt');
     i.classList.add('fa-trash-alt');
-    i.addEventListener('click', () => {
-      removeOne(task, showToDo);
+    i.addEventListener('mousedown', () => {
+      // removable = true;
+      removeOne(task, showToDo, removable);
     });
   });
   tick.addEventListener('click', () => {
@@ -121,23 +123,29 @@ const generateToDoRows = (text, task, tasks) => {
   const editToDo = (input, task, tasks) => {
     const { value } = input;
     if (value === '') {
-      removeOne(task, showToDo);
+      removable = true;
+      removeOne(task, showToDo, removable);
+      return false;
     }
     task.description = value;
     localStorage.setItem('tasks', JSON.stringify(tasks));
     // eslint-disable-next-line no-use-before-define
     showToDo();
+    return true;
   };
 
   input2.addEventListener('blur', () => {
     input2.style.backgroundColor = '#fff';
     div.style.backgroundColor = '#fff';
 
-    setTimeout(() => {
-      i.classList.remove('fa-trash-alt');
-      i.classList.add('fa-arrows-alt');
-      i.removeEventListener('click', () => removeOne(task, showToDo));
-    }, 200);
+    i.classList.remove('fa-trash-alt');
+    i.classList.add('fa-arrows-alt');
+
+    i.removeEventListener('click', () => {
+      removable = true;
+      removeOne(task, showToDo, removable);
+      return true;
+    });
   });
 
   input2.addEventListener('change', () => {
