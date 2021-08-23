@@ -14,7 +14,7 @@ A smart draggable to do list project to demonstrate my understanding of webpack 
 
 ## Live Demo
 
-[Live Demo Link](https://henrykc24.github.io/to-do-list-draggable/dist/index.html)
+[Live Demo Link](https://henrykc24.github.io/to-do-list-draggable/dist/)
 
 
 ## Getting Started
