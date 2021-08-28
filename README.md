@@ -3,7 +3,8 @@ A smart draggable to do list project to demonstrate my understanding of webpack 
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
 ![screenshot](./app_screenshot.png)
-![screenshot](./app_screenshot_moblile.png)
+![screenshot](./app_screenshot_mobile.png)
+![screenshot](./test_screenshot.jpg)
 
 ## Built With
 
@@ -11,6 +12,8 @@ A smart draggable to do list project to demonstrate my understanding of webpack 
 - CSS
 - JavaScript
 - Webpack
+- Jest
+- Babel
 
 ## Live Demo
 
