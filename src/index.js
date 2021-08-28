@@ -8,10 +8,12 @@ import {
   removeOne,
   removeSelected,
   addToDo,
+  storeLocally,
+  getFromStorage,
+  removable,
+  tasks,
 } from './manipulateToDo';
 
-let tasks = [];
-let removable = true;
 const goToInput = () => document.querySelector('.input').focus();
 
 document.querySelector(
@@ -30,9 +32,9 @@ const alternateTickAndCheck = (tick, check, task, input2) => {
   }
 };
 
-const showToDo = () => {
+const showToDo = (tasks) => {
   document.querySelector('.to-do-list').innerHTML = '';
-  const tasks = JSON.parse(localStorage.getItem('tasks'));
+  tasks = getFromStorage(tasks);
   if (typeof tasks[0] === 'object') {
     tasks.forEach((task, index, tasks) => {
       // eslint-disable-next-line no-use-before-define
@@ -40,18 +42,12 @@ const showToDo = () => {
     });
     return true;
   }
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  storeLocally(tasks);
   return true;
 };
 
 const refresh = (showToDo) => {
-  // tasks = _.sortBy(tasks, 'index');
-  if (localStorage.getItem('tasks') !== null) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  } else {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }
-  showToDo();
+  showToDo(tasks);
   goToInput();
   return true;
 };
@@ -88,15 +84,18 @@ const generateToDoRows = (text, task, tasks) => {
   i.classList.add('fas', 'fa-arrows-alt');
   div.appendChild(i);
 
+  const input2TrashRemoveEvent = () => {
+    removable.value = true;
+    removeOne(task, showToDo, removable);
+    return true;
+  };
+
   input2.addEventListener('focus', () => {
     input2.style.backgroundColor = '#fffeca';
     div.style.backgroundColor = '#fffeca';
     i.classList.remove('fa-arrows-alt');
     i.classList.add('fa-trash-alt');
-    i.addEventListener('mousedown', () => {
-      // removable = true;
-      removeOne(task, showToDo, removable);
-    });
+    i.addEventListener('mousedown', input2TrashRemoveEvent);
   });
   tick.addEventListener('click', () => {
     updateCompleted(task, tasks);
@@ -123,14 +122,14 @@ const generateToDoRows = (text, task, tasks) => {
   const editToDo = (input, task, tasks) => {
     const { value } = input;
     if (value === '') {
-      removable = true;
+      removable.value = true;
       removeOne(task, showToDo, removable);
       return false;
     }
     task.description = value;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    storeLocally(tasks);
     // eslint-disable-next-line no-use-before-define
-    showToDo();
+    showToDo(tasks);
     return true;
   };
 
@@ -140,12 +139,7 @@ const generateToDoRows = (text, task, tasks) => {
 
     i.classList.remove('fa-trash-alt');
     i.classList.add('fa-arrows-alt');
-
-    i.removeEventListener('click', () => {
-      removable = true;
-      removeOne(task, showToDo, removable);
-      return true;
-    });
+    i.removeEventListener('mousedown', input2TrashRemoveEvent);
   });
 
   input2.addEventListener('change', () => {
@@ -167,15 +161,13 @@ const generateToDoRows = (text, task, tasks) => {
   div.addEventListener('drag', (ev) => drag(ev));
   div.addEventListener('dragstart', (e) => dragStart(e));
   div.addEventListener('dragend', () => dragEnd(showToDo));
-  div.addEventListener('drop', (ev) => drop(ev));
+  div.addEventListener('drop', (ev) => drop(ev, showToDo));
 
   return true;
 };
 
-document.querySelector('.clear-text').addEventListener('click', () => {
-  if (localStorage.getItem('tasks') !== null) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  }
+document.querySelector('.clear-text').addEventListener('click', (tasks) => {
+  tasks = getFromStorage(tasks);
   removeSelected(tasks, showToDo);
 });
 
