@@ -1,7 +1,7 @@
 body {
   padding: 0;
   margin: 0;
-  background-color: #f6f6f6;
+  background-color: #f0f0f0;
   height: 100vh;
   flex: 1;
   display: flex;
@@ -142,7 +142,7 @@ body {
 .clear-all {
   text-align: center;
   line-height: 30px;
-  background-color: #f6f6f6;
+  background-color: #f0f0f0;
   border-bottom: none;
 }
 
