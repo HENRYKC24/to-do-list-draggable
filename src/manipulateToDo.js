@@ -180,11 +180,10 @@ const removeSelected = (tasks, showToDo) => {
   return true;
 };
 
-const addToDo = (tasks, showToDo, goToInput) => {
+const addToDo = (tasks, showToDo) => {
   tasks = getFromStorage(tasks);
-  const description = document.querySelector('.input').value;
+  const description = document.querySelector('.input').textContent;
   if (!description) {
-    goToInput();
     return false;
   }
 
@@ -194,11 +193,11 @@ const addToDo = (tasks, showToDo, goToInput) => {
     completed: false,
   };
 
-  tasks.push(data);
+  document.querySelector('.input').innerHTML = '';
+  tasks.unshift(data);
+  reorderIndices(tasks);
   storeLocally(tasks);
   showToDo(tasks);
-  document.querySelector('.input').value = '';
-  goToInput();
   return true;
 };
 

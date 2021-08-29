@@ -70,12 +70,11 @@ const generateToDoRows = (text, task, tasks) => {
   div2.appendChild(input);
   div2.appendChild(tick);
 
-  const input2 = document.createElement('input');
+  const input2 = document.createElement('span');
   input2.contentEditable = true;
   input2.classList.add('to-do');
 
-  input2.type = 'text';
-  input2.value = text;
+  input2.textContent = text;
   div2.appendChild(input2);
 
   div.appendChild(div2);
@@ -109,6 +108,7 @@ const generateToDoRows = (text, task, tasks) => {
     alternateTickAndCheck(tick, input, task, input2);
     return true;
   });
+
   if (task.completed) {
     tick.style.display = 'inline-block';
     input.style.display = 'none';
@@ -120,29 +120,25 @@ const generateToDoRows = (text, task, tasks) => {
   }
 
   const editToDo = (input, task, tasks) => {
-    const { value } = input;
-    if (value === '') {
-      removable.value = true;
-      removeOne(task, showToDo, removable);
-      return false;
-    }
-    task.description = value;
+    const { textContent } = input;
+    task.description = textContent;
     storeLocally(tasks);
-    // eslint-disable-next-line no-use-before-define
-    showToDo(tasks);
     return true;
   };
 
   input2.addEventListener('blur', () => {
     input2.style.backgroundColor = '#fff';
     div.style.backgroundColor = '#fff';
-
+    if (input2.textContent === '') {
+      removable.value = true;
+      removeOne(task, showToDo, removable);
+    }
     i.classList.remove('fa-trash-alt');
     i.classList.add('fa-arrows-alt');
     i.removeEventListener('mousedown', input2TrashRemoveEvent);
   });
 
-  input2.addEventListener('change', () => {
+  input2.addEventListener('keyup', () => {
     editToDo(input2, task, tasks);
   });
 
@@ -190,7 +186,7 @@ refreshButton.addEventListener('click', () => {
 
 document.querySelector('.input').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
-    addToDo(tasks, showToDo, goToInput);
+    addToDo(tasks, showToDo, goToInput, e);
   }
   return true;
 });
@@ -208,6 +204,18 @@ document
 refresh(showToDo);
 
 showToDo();
+document.querySelector('.input').addEventListener('keypress', (e) => {
+  if (e.key !== 'Enter') {
+    document.querySelector('.input').classList.remove('placeholder');
+  }
+});
+document.querySelector('.input').addEventListener('click', () => {
+  document.querySelector('.input').classList.remove('placeholder');
+});
+
+document.querySelector('.input').addEventListener('blur', () => {
+  document.querySelector('.input').classList.add('placeholder');
+});
 
 document.querySelector('.fa-sync').title = 'remove tasks completed more than one month ago';
 document.querySelector('.item:nth-child(3)').title = 'remove tasks completed more than one month ago';
