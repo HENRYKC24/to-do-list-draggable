@@ -13,6 +13,7 @@ import {
   removable,
   tasks,
 } from './manipulateToDo';
+import sortBy from './sortBy';
 
 const goToInput = () => document.querySelector('.input').focus();
 
@@ -32,9 +33,9 @@ const alternateTickAndCheck = (tick, check, task, input2) => {
   }
 };
 
-const showToDo = (tasks) => {
+const showToDo = () => {
   document.querySelector('.to-do-list').innerHTML = '';
-  tasks = getFromStorage(tasks);
+  const tasks = getFromStorage();
   if (typeof tasks[0] === 'object') {
     tasks.forEach((task, index, tasks) => {
       // eslint-disable-next-line no-use-before-define
@@ -46,8 +47,14 @@ const showToDo = (tasks) => {
   return true;
 };
 
+const option = document.querySelector('.sort-item');
+option.addEventListener('click', () => {
+  const criteria = document.querySelector('.sort-item').value;
+  sortBy(criteria, showToDo);
+});
+
 const refresh = (showToDo) => {
-  showToDo(tasks);
+  showToDo();
   goToInput();
   return true;
 };
@@ -162,8 +169,8 @@ const generateToDoRows = (text, task, tasks) => {
   return true;
 };
 
-document.querySelector('.clear-text').addEventListener('click', (tasks) => {
-  tasks = getFromStorage(tasks);
+document.querySelector('.clear-text').addEventListener('click', () => {
+  const tasks = getFromStorage();
   removeSelected(tasks, showToDo);
 });
 
@@ -174,7 +181,7 @@ document.querySelector('.fa-sync').addEventListener('click', () => {
   document.querySelector('.fa-sync').classList.toggle('rotate-sync');
 });
 
-document.querySelector('.item:nth-child(3)').addEventListener('click', () => {
+document.querySelector('.item:nth-child(4)').addEventListener('click', () => {
   document.querySelector('.fa-sync').classList.toggle('rotate-sync');
 });
 
@@ -192,13 +199,13 @@ document.querySelector('.input').addEventListener('keypress', (e) => {
 });
 
 document
-  .querySelector('.item:nth-child(1)')
+  .querySelector('.item:nth-child(2)')
   .addEventListener('click', () => addToDo(tasks, showToDo, goToInput));
 document
-  .querySelector('.item:nth-child(2)')
+  .querySelector('.item:nth-child(3)')
   .addEventListener('click', () => removeSelected(tasks, showToDo));
 document
-  .querySelector('.item:nth-child(3)')
+  .querySelector('.item:nth-child(4)')
   .addEventListener('click', () => refresh(showToDo));
 
 refresh(showToDo);
@@ -218,9 +225,9 @@ document.querySelector('.input').addEventListener('blur', () => {
 });
 
 document.querySelector('.fa-sync').title = 'remove tasks completed more than one month ago';
-document.querySelector('.item:nth-child(3)').title = 'remove tasks completed more than one month ago';
-document.querySelector('.item:nth-child(2)').title = 'remove completed tasks';
-document.querySelector('.item:nth-child(1)').title = 'add tasks';
+document.querySelector('.item:nth-child(4)').title = 'remove tasks completed more than one month ago';
+document.querySelector('.item:nth-child(3)').title = 'remove completed tasks';
+document.querySelector('.item:nth-child(2)').title = 'add tasks';
 document.querySelector('.clear-text').title = 'remove completed tasks';
 const allCheckboxes = Array.from(document.querySelectorAll('.checkbox'));
 allCheckboxes.forEach((checkbox) => {

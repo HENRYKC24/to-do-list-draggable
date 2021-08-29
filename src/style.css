@@ -22,13 +22,22 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 0 5vw;
+  font-size: 0.6rem;
   background-color: #4c3c3c;
   color: white;
   height: 50px;
 }
 
+.sort-item {
+  background-color: #4c3c3c;
+  border-color: #4c3c3c;
+  color: white;
+  font-weight: bold;
+  outline: none;
+  font-size: 0.7rem;
+}
+
 .app-name {
-  font-size: 1.3rem;
   font-weight: bold;
 }
 
@@ -102,7 +111,7 @@ body {
 
 .to-do {
   border: none;
-  padding: 0;
+  padding: 5px 0;
   margin: 0;
   display: flex;
   align-items: center;
@@ -256,5 +265,17 @@ body {
 @media all and (min-width: 786px) {
   .app {
     width: 50vw;
+  }
+
+  .nav-bar {
+    font-size: 1rem;
+  }
+
+  .app-name {
+    font-size: 1.3rem;
+  }
+
+  .sort-item {
+    font-size: 1rem;
   }
 }

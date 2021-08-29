@@ -16,7 +16,12 @@ const toggleDraggable = () => {
   });
 };
 
-const getFromStorage = (tasks) => (localStorage.tasks ? JSON.parse(localStorage.getItem('tasks')) : tasks);
+const getFromStorage = () => {
+  if (localStorage.tasks) {
+    return JSON.parse(localStorage.getItem('tasks'));
+  }
+  return [];
+};
 
 const storeLocally = (tasks) => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -29,6 +34,8 @@ const reorderIndices = (tasks) => {
     task.index = index;
     index += 1;
   });
+  storeLocally(tasks);
+  return tasks;
 };
 
 const drag = (ev) => {
@@ -181,7 +188,7 @@ const removeSelected = (tasks, showToDo) => {
 };
 
 const addToDo = (tasks, showToDo) => {
-  tasks = getFromStorage(tasks);
+  tasks = getFromStorage();
   const description = document.querySelector('.input').textContent;
   if (!description) {
     return false;
@@ -191,13 +198,14 @@ const addToDo = (tasks, showToDo) => {
     description,
     index: tasks.length + 1,
     completed: false,
+    timeStamp: new Date().getTime(),
   };
 
   document.querySelector('.input').innerHTML = '';
   tasks.unshift(data);
-  reorderIndices(tasks);
+  tasks = reorderIndices(tasks);
   storeLocally(tasks);
-  showToDo(tasks);
+  showToDo();
   return true;
 };
 
@@ -211,6 +219,7 @@ export {
   addToDo,
   getFromStorage,
   storeLocally,
+  reorderIndices,
   removable,
   tasks,
 };
