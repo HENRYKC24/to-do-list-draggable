@@ -29,7 +29,7 @@ Clone the repo with `git clone https://github.com/HENRYKC24/to-do-draggable.git`
 
 Run `npm install` from the command line
 
-Run `npx hint .` to test for html linting check
+Run `npx eslint .` to test for JavaScript linting check
 
 Run `npx stylelint "**/*.{css,scss}"` to test for css linting check 
 
