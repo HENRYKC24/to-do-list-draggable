@@ -192,6 +192,7 @@ refreshButton.addEventListener('click', () => {
 });
 
 document.querySelector('.input').addEventListener('keypress', (e) => {
+  document.querySelector('.input').classList.toggle('placeholder');
   if (e.key === 'Enter') {
     addToDo(tasks, showToDo, goToInput, e);
   }
